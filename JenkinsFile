@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Cloning repository'
-                git branch 'main',
+                git branch: 'main',
                     url 'https://github.com/myself-moons/Jenkins_Test.git'
             }
         }
