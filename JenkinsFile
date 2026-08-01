@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Cloning repository'
                 git branch: 'main',
-                    url 'https://github.com/myself-moons/Jenkins_Test.git'
+                    url :'https://github.com/myself-moons/Jenkins_Test.git'
             }
         }
     }
