@@ -1,1 +1,7 @@
 Testing Poll 
+
+dvc stage add -n Data_Collection -d src/datacollection.py -o data/raw
+
+python src/datacollection.py
+
+dvc stage add -n Data_Collection -d src/datacollection.py -o data/raw
