@@ -1,0 +1,18 @@
+Pipeline Sequence
+
+dvc init
+
+dvc stage add -n Data_Collection
+              d src/data_collection.py 
+              -o data/raw 
+              python src/data_collection.py
+
+
+dvc stage add -n Data_Preprocessing 
+              -d src/data_preprocessing.py 
+              -o data/processed
+              python src/data_preprocessing.py
+
+dvc stage add -n Model_Training -d src/model_training.py  -o model.pkl python src/model_training.py
+
+dvc repro

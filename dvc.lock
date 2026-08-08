@@ -13,3 +13,28 @@ stages:
       md5: 6943e655800134f51910892c621c7b98.dir
       size: 518984
       nfiles: 2
+  Data_Preprocessing:
+    cmd: python src/data_preprocessing.py
+    deps:
+    - path: src/data_preprocessing.py
+      hash: md5
+      md5: 438f937ad92e80bef3437e707af28081
+      size: 955
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: e81edf3f535cee56d27ab9fa9baa4dc5.dir
+      size: 518608
+      nfiles: 2
+  Model_Training:
+    cmd: python src/model_training.py
+    deps:
+    - path: src/model_training.py
+      hash: md5
+      md5: 0a76eeb8df5ecb264f8ebf345f8173bf
+      size: 465
+    outs:
+    - path: model.pkl
+      hash: md5
+      md5: c4888f32c258db1589c9c5d01bc42ce2
+      size: 7200963
