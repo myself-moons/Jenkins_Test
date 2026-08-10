@@ -15,4 +15,6 @@ dvc stage add -n Data_Preprocessing
 
 dvc stage add -n Model_Training -d src/model_training.py  -o model.pkl python src/model_training.py
 
+dvc stage add -n Evaluation -d model_evaluation.py -d model.pkl -d data/processed/test_processed.csv -o metrics.json python model_evaluation.py
+
 dvc repro

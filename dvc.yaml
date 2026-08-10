@@ -2,18 +2,34 @@ stages:
   Data_Collection:
     cmd: python src/data_collection.py
     deps:
-    - src/data_collection.py
+      - src/data_collection.py
     outs:
-    - data/raw
+      - data/raw/train.csv
+      - data/raw/test.csv
+
   Data_Preprocessing:
     cmd: python src/data_preprocessing.py
     deps:
-    - src/data_preprocessing.py
+      - src/data_preprocessing.py
+      - data/raw/train.csv
+      - data/raw/test.csv
     outs:
-    - data/processed
+      - data/processed/train_processed.csv
+      - data/processed/test_processed.csv
+
   Model_Training:
     cmd: python src/model_training.py
     deps:
-    - src/model_training.py
+      - data/processed/train_processed.csv
+      - src/model_training.py
     outs:
-    - model.pkl
+      - model.pkl
+
+  Evaluation:
+    cmd: python src/model_evaluation.py
+    deps:
+      - data/processed/test_processed.csv
+      - model.pkl
+      - src/model_evaluation.py
+    outs:
+      - metrics.json
