@@ -10,8 +10,8 @@ from sklearn.ensemble import RandomForestClassifier
 train_data = pd.read_csv("./data/processed/train_processed.csv")
 
 # Split features and target
-X_train = train_data.iloc[:, 0:-1].values
-y_train = train_data.iloc[:, -1].values
+X_train = train_data.drop(columns=["Potability"]).values
+y_train = train_data["Potability"].values
 
 # Train the model
 clf = RandomForestClassifier()

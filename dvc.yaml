@@ -21,6 +21,7 @@ stages:
     cmd: python src/model_training.py
     deps:
       - data/processed/train_processed.csv
+      - data/processed/test_processed.csv
       - src/model_training.py
     outs:
       - model.pkl
@@ -28,7 +29,6 @@ stages:
   Evaluation:
     cmd: python src/model_evaluation.py
     deps:
-      - data/processed/test_processed.csv
       - model.pkl
       - src/model_evaluation.py
     outs:
