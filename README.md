@@ -149,9 +149,61 @@ curl -X POST "http://localhost:8000/predict" \
   }'
 ```
 
-## 8. Important notes
+## 8. Jenkins setup requirements
+
+To run this project in Jenkins, the CI environment should have the following available:
+
+- Java JDK installed for Jenkins itself
+- Jenkins installed and running
+- A GitHub repository webhook or Jenkins Git polling configured for the project
+- A Linux-based executor/agent with Python installed
+- Access to the project workspace and repository credentials
+- DVC installed on the Jenkins agent
+- Python dependencies installed in the environment used by Jenkins
+
+Typical setup commands on a Jenkins agent:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install pandas numpy scikit-learn fastapi uvicorn pydantic dvc
+```
+
+It is also important to configure Jenkins with:
+
+- a pipeline job or multibranch pipeline
+- the repository URL and branch to build
+- a Jenkinsfile that runs the project steps
+- a suitable shell or Python execution environment
+- permissions to create and read files such as `model.pkl`, `metrics.json`, and the `data/` folder
+
+## 9. Jenkins pipeline idea
+
+The Jenkins job should usually follow this flow:
+
+1. Pull the repository
+2. Create or activate the Python environment
+3. Install dependencies
+4. Run `dvc repro` to execute the data and model pipeline
+5. Validate outputs such as `model.pkl` and `metrics.json`
+6. Optionally run API tests or start the FastAPI app for smoke testing
+
+Example shell flow:
+
+```bash
+cd /workspace/Jenkins_Test
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install pandas numpy scikit-learn fastapi uvicorn pydantic dvc
+dvc repro
+```
+
+## 10. Important notes
 
 - The pipeline must run in order: collection -> preprocessing -> training -> evaluation.
 - The model file `model.pkl` must exist before starting the API service.
 - Use the docs at `/docs` to check all FastAPI endpoints quickly.
 - If you change a dependency upstream, rerun `dvc repro` to rebuild the downstream stages automatically.
+- Jenkins should be treated as the automation layer that runs the same project commands you run locally.
