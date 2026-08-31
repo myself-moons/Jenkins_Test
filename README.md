@@ -21,7 +21,17 @@ Data_Collection
 
 This is the correct workflow for the project because each stage depends on the outputs of the previous stage.
 
-## 0. Set up Jenkins with the repo
+
+## 0. Create the virtual environment
+
+```bash
+cd /workspaces/Jenkins_Test
+python -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install pandas numpy scikit-learn fastapi uvicorn pydantic
+```
+## 1. Set up Jenkins with the repo
 
 Use the following steps to connect Jenkins to this repository and run the pipeline using the included JenkinsFile.
 
@@ -41,16 +51,6 @@ Use the following steps to connect Jenkins to this repository and run the pipeli
 9. If the repository is private, add the required GitHub credentials to Jenkins before saving the pipeline configuration.
 
 This repo is already set up to use `JenkinsFile` as the pipeline definition. The key requirement is that Jenkins must run the same project commands described later in this README, especially `dvc repro` for the ML pipeline.
-
-## 1. Create the virtual environment
-
-```bash
-cd /workspaces/Jenkins_Test
-python -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install pandas numpy scikit-learn fastapi uvicorn pydantic
-```
 
 ## 2. Initialize DVC
 
