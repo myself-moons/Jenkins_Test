@@ -21,6 +21,27 @@ Data_Collection
 
 This is the correct workflow for the project because each stage depends on the outputs of the previous stage.
 
+## 0. Set up Jenkins with the repo
+
+Use the following steps to connect Jenkins to this repository and run the pipeline using the included JenkinsFile.
+
+1. Install Jenkins on the machine that will run the build.
+2. Open Jenkins in the browser at `http://localhost:8080` (or the machine's IP and port if it is remote).
+3. Create a user if needed for local testing when installing, for example `jadmin` with password `1234`.
+4. In the Jenkins Dashboard, click `New Item` and create a `Pipeline` job named something like `Pipeline_Eg`.
+5. In the job configuration:
+   - Set `Definition` to `Pipeline script from SCM`
+   - Set `SCM` to `Git`
+   - Repository URL: `https://github.com/myself-moons/Jenkins_Test.git`
+   - Branch Specifier: `main` (or `*/main` depending on your Jenkins Git configuration)
+   - Script Path: `JenkinsFile`
+6. Save the job and click `Build Now` to validate the connection.
+7. To trigger automatic builds, enable `Poll SCM` and use a schedule such as `H/2 * * * *`.
+8. Make sure the Jenkins agent has Git, Python, and DVC installed so the project can run correctly.
+9. If the repository is private, add the required GitHub credentials to Jenkins before saving the pipeline configuration.
+
+This repo is already set up to use `JenkinsFile` as the pipeline definition. The key requirement is that Jenkins must run the same project commands described later in this README, especially `dvc repro` for the ML pipeline.
+
 ## 1. Create the virtual environment
 
 ```bash
@@ -149,58 +170,7 @@ curl -X POST "http://localhost:8000/predict" \
   }'
 ```
 
-## 8. Jenkins setup requirements
-
-To run this project in Jenkins, the CI environment should have the following available:
-
-- Java JDK installed for Jenkins itself
-- Jenkins installed and running
-- A GitHub repository webhook or Jenkins Git polling configured for the project
-- A Linux-based executor/agent with Python installed
-- Access to the project workspace and repository credentials
-- DVC installed on the Jenkins agent
-- Python dependencies installed in the environment used by Jenkins
-
-Typical setup commands on a Jenkins agent:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install pandas numpy scikit-learn fastapi uvicorn pydantic dvc
-```
-
-It is also important to configure Jenkins with:
-
-- a pipeline job or multibranch pipeline
-- the repository URL and branch to build
-- a Jenkinsfile that runs the project steps
-- a suitable shell or Python execution environment
-- permissions to create and read files such as `model.pkl`, `metrics.json`, and the `data/` folder
-
-## 9. Jenkins pipeline idea
-
-The Jenkins job should usually follow this flow:
-
-1. Pull the repository
-2. Create or activate the Python environment
-3. Install dependencies
-4. Run `dvc repro` to execute the data and model pipeline
-5. Validate outputs such as `model.pkl` and `metrics.json`
-6. Optionally run API tests or start the FastAPI app for smoke testing
-
-Example shell flow:
-
-```bash
-cd /workspace/Jenkins_Test
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -U pip
-pip install pandas numpy scikit-learn fastapi uvicorn pydantic dvc
-dvc repro
-```
-
-## 10. Important notes
+## Important notes
 
 - The pipeline must run in order: collection -> preprocessing -> training -> evaluation.
 - The model file `model.pkl` must exist before starting the API service.
